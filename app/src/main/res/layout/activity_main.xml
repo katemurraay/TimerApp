@@ -12,6 +12,17 @@
     android:layout_height="match_parent"
     android:id="@+id/relative_layout"
     >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:id="@+id/tvTime"
+        android:layout_alignParentTop="true"
+        android:textSize="100sp"
+        android:textAlignment="center"/>
     <com.google.android.material.bottomnavigation.BottomNavigationView
 
         android:id="@+id/bottom_navigation"
