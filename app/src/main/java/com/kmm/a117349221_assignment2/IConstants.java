@@ -6,5 +6,6 @@ public class IConstants {
     public static String MILLIS_LEFT = "millis_remaining";
     public static String TIMER_RUNNING ="timer_running";
     public static String END_TIME = "end_time";
+    public static String TIME_LEFT ="countdown";
 
 }

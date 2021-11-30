@@ -67,14 +67,14 @@ public class TimerActivity extends AppCompatActivity {
         spSeconds.setAdapter(adapterMins);
         spMins.setAdapter(adapterMins);
         spHours.setAdapter(adapterHours);
-btnStart.setOnClickListener((v)->{
-    int min = Integer.parseInt(mins[spMins.getSelectedItemPosition()]);
-    int sec = Integer.parseInt(mins[spSeconds.getSelectedItemPosition()]);
-    int hour = Integer.parseInt(hours[spHours.getSelectedItemPosition()]);
-    setTimer(hour, min, sec);
-});
+        btnStart.setOnClickListener((v)->{
+            int min = Integer.parseInt(mins[spMins.getSelectedItemPosition()]);
+            int sec = Integer.parseInt(mins[spSeconds.getSelectedItemPosition()]);
+            int hour = Integer.parseInt(hours[spHours.getSelectedItemPosition()]);
+            setTimer(hour, min, sec);
+        });
 
-        startService(new Intent(this, TimerService.class));
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -103,10 +103,13 @@ btnStart.setOnClickListener((v)->{
     @Override
     public void onResume() {
         super.onResume();
-     
+        registerReceiver(broadcastReceiver,new IntentFilter(TimerService.COUNTDOWN_BR));
+
+
     }
 
-    private void startTimer(){
+    private void resumeTimer(){
+        //https://gist.github.com/codinginflow/61e9cec706e7fe94b0ca3fffc0253bf2
        endTime = System.currentTimeMillis() + millisLeft;
 
 
@@ -118,6 +121,10 @@ btnStart.setOnClickListener((v)->{
 
     }
 
+    private void cancelTimer(){
+        Intent intent = new Intent(getApplicationContext(),TimerService.class);
+        stopService(intent);
+    }
 
     private void setTimer(int hours, int mins, int secs){
         long milliHours = hours * 60 * 60 * 1000;
@@ -179,17 +186,23 @@ btnStart.setOnClickListener((v)->{
     };
 
     private void updateUI(Intent intent) {
-        int time = intent.getIntExtra("time", 0);
+        long millisTime = intent.getLongExtra(IConstants.TIME_LEFT, 0);
 
-        Log.d("Hello", "Time " + time);
+        Log.d("Hello", "Time " + millisTime);
 
-        int mins = time / 60;
-        int secs = time % 60;
+        int hours   = (int) ((millisTime / (1000*60*60)) % 24);
+        int minutes = (int) (millisTime / 1000) / 60;
+        int seconds = (int) (millisTime/ 1000) % 60;
        // timerValue.setText("" + mins + ":"
         //        + String.format("%02d", secs));
     }
 
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
+    }
 
 }
 

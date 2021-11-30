@@ -54,7 +54,13 @@ public class ClockActivity extends AppCompatActivity {
        c =  Calendar.getInstance();
        int hour = c.get(Calendar.HOUR_OF_DAY);
        int min = c.get(Calendar.MINUTE);
-       String time = String.valueOf(hour) + " : " + String.valueOf(min);
+       String time;
+       if(min>10) {
+          time = String.valueOf(hour) + " : " + String.valueOf(min);
+       } else{
+           time = String.valueOf(hour) + " : 0" + String.valueOf(min);
+
+       }
        tvTime.setText(time);
 
 
