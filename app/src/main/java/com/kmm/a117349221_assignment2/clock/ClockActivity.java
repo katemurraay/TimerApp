@@ -50,19 +50,27 @@ public class ClockActivity extends AppCompatActivity {
 //https://stackoverflow.com/a/4776556
       timer = new Timer();
       timerTask = new TimerTask() {
-            @Override
+          long millis;
+
+          @Override
             public void run() {
                c = Calendar.getInstance();
                Date time = c.getTime();
                 String pattern = "HH:mm";
                 SimpleDateFormat dateFormat =  new SimpleDateFormat(pattern);
-                String strTime = dateFormat.format(time);
-                tvTime.setText(strTime);
 
-                Log.d("VIEWMODEL", "CALLED");
+              String pattern1 = "ss";
+              SimpleDateFormat secFormat =  new SimpleDateFormat(pattern1);
+              int seconds = Integer.parseInt(secFormat.format(time));
+              millis = seconds * 1000;
+
+              String strTime = dateFormat.format(time);
+              tvTime.setText(strTime);
+
+                Log.d("TIMER", "CALLED");
             }
         };
-        timer.schedule(timerTask, 0, 10000);
+        timer.schedule(timerTask, 1000, 1000);
 
 
 
