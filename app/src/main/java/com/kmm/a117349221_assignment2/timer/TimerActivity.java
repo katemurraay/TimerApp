@@ -58,11 +58,12 @@ public class TimerActivity extends AppCompatActivity {
     private String[] mins;
     private Spinner spHours, spMins, spSeconds;
     private Button btnStart;
-    private RelativeLayout rlTimer, rlTimerSet;
+    private RelativeLayout rlTimer, rlTimerSet, rlTimerParent;
     private FrameLayout flTimer;
     private TextView tvTimeLeft;
     private Button btnPause;
     private NotificationManagerCompat notificationManager;
+    private TimerSurfaceView timerSurfaceView =null;
 
 
     @Override
@@ -79,7 +80,8 @@ public class TimerActivity extends AppCompatActivity {
         btnStart = findViewById(R.id.btnStart);
         rlTimer = findViewById(R.id.rlTimer);
         rlTimerSet = findViewById(R.id.rlTimerSet);
-        flTimer = findViewById(R.id.flTimer);
+        flTimer =findViewById(R.id.flTimer);
+        rlTimerParent = findViewById(R.id.rlTimerParent);
         tvTimeLeft = findViewById(R.id.tvTimeLeft);
         hours = getResources().getStringArray(R.array.hours);
         mins = getResources().getStringArray(R.array.minutes);
@@ -92,6 +94,7 @@ public class TimerActivity extends AppCompatActivity {
         spSeconds.setAdapter(adapterMins);
         spMins.setAdapter(adapterMins);
         spHours.setAdapter(adapterHours);
+
         btnStart.setOnClickListener((v)->{
             int min = Integer.parseInt(mins[spMins.getSelectedItemPosition()]);
             int sec = Integer.parseInt(mins[spSeconds.getSelectedItemPosition()]);
@@ -110,15 +113,19 @@ public class TimerActivity extends AppCompatActivity {
                 pauseTime();
             }
         });
-
+        setContentView(flTimer);
     }
 
     private void updateVisibility(){
         if(timerRunning){
-            rlTimer.setVisibility(View.GONE);
-            rlTimerSet.setVisibility(View.VISIBLE);
-
+            flTimer.removeAllViews();
+            flTimer.addView(timerSurfaceView);
+            flTimer.addView(rlTimerParent);
+           rlTimerSet.setVisibility(View.VISIBLE);
+           rlTimer.setVisibility(View.GONE);
         } else{
+            flTimer.removeAllViews();
+            flTimer.addView(rlTimerParent);
             rlTimerSet.setVisibility(View.GONE);
             rlTimer.setVisibility(View.VISIBLE);
             spHours.setSelection(0);
@@ -182,7 +189,9 @@ public class TimerActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         registerReceiver(broadcastReceiver, new IntentFilter(TimerService.COUNTDOWN_BR));
-
+        if(timerSurfaceView!=null){
+        timerSurfaceView.onResumeTimer();
+        }
     }
 
     private void resumeTimer(){
@@ -233,7 +242,7 @@ public class TimerActivity extends AppCompatActivity {
         long milliMins = mins * 60 * 1000;
         long milliSecs = secs * 1000;
         long millisLeft = milliHours + milliMins + milliSecs;
-
+        timerSurfaceView = new TimerSurfaceView(this, 350, millisLeft);
 
         timerRunning = true;
 
@@ -267,6 +276,14 @@ public class TimerActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(timerSurfaceView!=null){
+            timerSurfaceView.onPauseTimer();
+        }
+    }
+
     private void updateUI(Intent intent) {
         boolean isRunning = intent.getBooleanExtra(IS_RUNNING, false);
         prefs = getSharedPreferences(TIMER_PREFERENCES, MODE_PRIVATE);
@@ -275,24 +292,19 @@ public class TimerActivity extends AppCompatActivity {
         if(isRunning){
         long millisTime = intent.getLongExtra(TIME_LEFT, 0);
 
-        int hours   = (int) ((millisTime / (1000*60*60)) % 24);
-        int minutes = (int) (millisTime / (1000*60)) % 60;
-        int seconds = (int) (millisTime / 1000) % 60;
-        String timeLeftFormatted = new String();
-        if(hours ==0) {
-              timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
-        } else{
-            timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
 
-        }
 
             timerRunning = true;
-            tvTimeLeft.setText(timeLeftFormatted);
+
             updateVisibility();
 
         } else{
+
+
+            //set notification
             String title = "TIMER";
             String message= "Timer Completed";
+
             Notification notification = new NotificationCompat.Builder(this, CHANNEL_TIMER_ID)
                     .setSmallIcon(R.drawable.ic_timer)
                     .setContentTitle(title)

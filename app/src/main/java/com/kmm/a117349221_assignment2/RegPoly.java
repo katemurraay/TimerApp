@@ -43,4 +43,11 @@ public class RegPoly {
             canvas.drawCircle(getX(i), getY(i),  radius, paint);
         }
     }
+
+    public void drawCircle (float radius){
+        canvas.drawCircle( x0, y0, radius, paint);
+    }
+    public void drawText(String text){
+        canvas.drawText(text, x0, y0, paint );
+    }
 }

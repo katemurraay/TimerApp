@@ -9,6 +9,7 @@
     tools:context=".timer.TimerActivity">
     <RelativeLayout
         android:layout_width="match_parent"
+        android:id="@+id/rlTimerParent"
         android:layout_height="match_parent">
     <RelativeLayout
         android:id="@+id/rlTimer"
