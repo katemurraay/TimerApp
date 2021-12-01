@@ -67,7 +67,7 @@ public class TimerService extends Service {
     public void onDestroy() {
         cdt.cancel();
         editor.putLong(IConstants.PAUSED_TIME, timeLeft).apply();
-        Log.i(TAG, "Timer cancelled");
+
         super.onDestroy();
     }
 
