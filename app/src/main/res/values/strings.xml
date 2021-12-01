@@ -93,7 +93,7 @@
     </string-array>
     <string name="btn_start">Start</string>
     <string name="btn_pause">Pause</string>
-    <string name="btn_stop">Stop</string>
+    <string name="btn_cancel">Cancel</string>
     <string name="btn_restart">Resume</string>
     <string name="tv_hours">hours</string>
     <string name="tv_min"> min</string>

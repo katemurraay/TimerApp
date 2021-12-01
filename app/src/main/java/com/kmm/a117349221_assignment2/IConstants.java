@@ -7,5 +7,8 @@ public class IConstants {
     public static String TIMER_RUNNING ="timer_running";
     public static String END_TIME = "end_time";
     public static String TIME_LEFT ="countdown";
+    public static String IS_RUNNING = "countdown_running";
+    public static String TIMER_PAUSED = "timer_paused";
+    public static String PAUSED_TIME = "time_at_pause";
 
 }
