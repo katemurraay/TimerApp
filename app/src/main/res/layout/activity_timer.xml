@@ -137,7 +137,9 @@ android:id="@+id/btnStart"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             app:menu="@menu/bottom_navigation"
-            android:background="?android:attr/windowBackground"
+            app:itemIconTint="@color/nav_color"
+            app:itemTextColor="@color/nav_color"
+            android:background="@drawable/bottom_nav_shape"
             />
     </RelativeLayout>
 </FrameLayout>

@@ -1,4 +1,4 @@
-package com.kmm.a117349221_assignment2.clock;
+package com.kmm.a117349221_assignment2.timer;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,15 +11,14 @@ import com.kmm.a117349221_assignment2.RegPoly;
 
 import java.util.Calendar;
 
-public class ClockSurfaceView extends SurfaceView implements Runnable {
-
+public class TimerSurfaceView extends SurfaceView implements Runnable {
     private float length;
     private Thread thread;
     private boolean running= false;
     private SurfaceHolder holder;
 
 
-    public ClockSurfaceView(Context context, float length) {
+    public TimerSurfaceView(Context context, float length) {
         super(context);
         this.length = length;
         holder = getHolder();
@@ -37,13 +36,13 @@ public class ClockSurfaceView extends SurfaceView implements Runnable {
         running = false;
         boolean retry = true;
         while (retry){
-       try {
-           thread.join();
-           retry =false;
-       } catch (InterruptedException e){
-           e.printStackTrace();
-       }
-    }
+            try {
+                thread.join();
+                retry =false;
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -60,7 +59,7 @@ public class ClockSurfaceView extends SurfaceView implements Runnable {
                 //draw the clock
                 Paint backPaint = new Paint();
                 backPaint.setColor(Color.BLACK);
-                 canvas.drawPaint(backPaint);
+                canvas.drawPaint(backPaint);
                 Paint forePaint = new Paint();
                 forePaint.setColor(Color.WHITE);
                 forePaint.setStrokeWidth(2f);
@@ -86,11 +85,11 @@ public class ClockSurfaceView extends SurfaceView implements Runnable {
                 }
                 //make 3 reg polys for the hands
                 forePaint.setStrokeWidth(5f);
-                RegPoly secHand = new RegPoly(60, getWidth()/2, getHeight()/2, length+10, canvas, forePaint);
-                RegPoly minHand = new RegPoly(60, getWidth()/2, getHeight()/2, length-60, canvas, forePaint);
+                RegPoly secHand = new RegPoly(60, getWidth()/2, getHeight()/2, length-20, canvas, forePaint);
+                RegPoly minHand = new RegPoly(60, getWidth()/2, getHeight()/2, length-50, canvas, forePaint);
                 RegPoly hourHand = new RegPoly(60, getWidth()/2, getHeight()/2, length-100, canvas, forePaint);
                 RegPoly milliHand = new RegPoly(60,  7 *getWidth()/20, 11 *getHeight()/20, length-220, canvas, forePaint);
-               //get hour, min, sec from calender
+                //get hour, min, sec from calender
                 Calendar calendar = Calendar.getInstance();
                 hour = calendar.get(Calendar.HOUR);
                 minute = calendar.get(Calendar.MINUTE);

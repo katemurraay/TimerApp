@@ -1,4 +1,4 @@
-package com.kmm.a117349221_assignment2.clock;
+package com.kmm.a117349221_assignment2;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

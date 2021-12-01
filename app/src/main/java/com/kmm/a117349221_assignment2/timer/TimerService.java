@@ -39,6 +39,7 @@ public class TimerService extends Service {
 
         mpref = getSharedPreferences(IConstants.TIMER_PREFERENCES, MODE_PRIVATE);
         editor = mpref.edit();
+
         long millis = mpref.getLong(IConstants.MILLIS_LEFT, 1000);
          Log.d("MILLIS", String.valueOf(millis));
         cdt = new CountDownTimer(millis, 1000) {
@@ -46,6 +47,8 @@ public class TimerService extends Service {
             public void onTick(long millisUntilFinished) {
                 Log.i(TAG, "Countdown seconds remaining: " + millisUntilFinished / 1000);
                 timeLeft = millisUntilFinished;
+                long endtime = System.currentTimeMillis() + millisUntilFinished;
+                editor.putLong(IConstants.END_TIME, endtime).apply();
                 bi.putExtra(IConstants.TIME_LEFT, millisUntilFinished);
                 bi.putExtra(IConstants.IS_RUNNING, true);
                 sendBroadcast(bi);

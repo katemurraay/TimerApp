@@ -11,4 +11,7 @@ public class IConstants {
     public static String TIMER_PAUSED = "timer_paused";
     public static String PAUSED_TIME = "time_at_pause";
 
+    /* NOTIFICATION CHANNELS */
+    public static final String CHANNEL_TIMER_ID = "timer_channel";
+
 }

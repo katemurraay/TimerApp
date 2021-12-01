@@ -2,7 +2,11 @@ package com.kmm.a117349221_assignment2.timer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -28,6 +32,7 @@ import com.kmm.a117349221_assignment2.clock.ClockActivity;
 
 import java.util.Locale;
 
+import static com.kmm.a117349221_assignment2.IConstants.CHANNEL_TIMER_ID;
 import static com.kmm.a117349221_assignment2.IConstants.END_TIME;
 import static com.kmm.a117349221_assignment2.IConstants.IS_RUNNING;
 import static com.kmm.a117349221_assignment2.IConstants.MILLIS_LEFT;
@@ -48,31 +53,29 @@ public class TimerActivity extends AppCompatActivity {
   private Button btnCancel;
   private SharedPreferences prefs;
   private SharedPreferences.Editor editor;
-    private static final long START_TIME_IN_MILLIS = 600000;
+
     private String[] hours;
     private String[] mins;
     private Spinner spHours, spMins, spSeconds;
-    private TextView tvHour, tvMin, tvSec;
     private Button btnStart;
     private RelativeLayout rlTimer, rlTimerSet;
     private FrameLayout flTimer;
     private TextView tvTimeLeft;
     private Button btnPause;
+    private NotificationManagerCompat notificationManager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
+        notificationManager = NotificationManagerCompat.from(this);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_timer);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
         spHours = findViewById(R.id.spHours);
         spMins= findViewById(R.id.spMins);
         spSeconds= findViewById(R.id.spSeconds);
-        tvHour = findViewById(R.id.tvHour);
-        tvMin = findViewById(R.id.tvMin);
-        tvSec = findViewById(R.id.tvSec);
         btnStart = findViewById(R.id.btnStart);
         rlTimer = findViewById(R.id.rlTimer);
         rlTimerSet = findViewById(R.id.rlTimerSet);
@@ -114,6 +117,7 @@ public class TimerActivity extends AppCompatActivity {
         if(timerRunning){
             rlTimer.setVisibility(View.GONE);
             rlTimerSet.setVisibility(View.VISIBLE);
+
         } else{
             rlTimerSet.setVisibility(View.GONE);
             rlTimer.setVisibility(View.VISIBLE);
@@ -139,6 +143,14 @@ public class TimerActivity extends AppCompatActivity {
             }
             btnPause.setText(getResources().getString(R.string.btn_restart));
             tvTimeLeft.setText(timeLeftFormatted);
+        } else if(endTime>0 && tvTimeLeft.getText().toString().equals("")){
+            prefs = getSharedPreferences(TIMER_PREFERENCES, MODE_PRIVATE);
+            long timeLeft = endTime - System.currentTimeMillis();
+            editor = prefs.edit();
+            editor.putLong(TIME_LEFT, timeLeft).apply();
+            Intent intent = new Intent(getApplicationContext(), TimerService.class);
+            startService(intent);
+
         }
     }
 
@@ -212,15 +224,17 @@ public class TimerActivity extends AppCompatActivity {
         stopService(intent);
         editor = prefs.edit();
         editor.clear().apply();
-
         updateVisibility();
     }
 
     private void setTimer(int hours, int mins, int secs){
+
         long milliHours = hours * 60 * 60 * 1000;
         long milliMins = mins * 60 * 1000;
         long milliSecs = secs * 1000;
         long millisLeft = milliHours + milliMins + milliSecs;
+
+
         timerRunning = true;
 
         editor = prefs.edit();
@@ -239,8 +253,11 @@ public class TimerActivity extends AppCompatActivity {
         prefs = getSharedPreferences(TIMER_PREFERENCES, MODE_PRIVATE);
         timerRunning = prefs.getBoolean(TIMER_RUNNING, false);
         timerPaused = prefs.getBoolean(TIMER_PAUSED, false);
+        endTime = prefs.getLong(END_TIME, 0);
         updateVisibility();
         resumeView();
+
+
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -274,17 +291,22 @@ public class TimerActivity extends AppCompatActivity {
             updateVisibility();
 
         } else{
+            String title = "TIMER";
+            String message= "Timer Completed";
+            Notification notification = new NotificationCompat.Builder(this, CHANNEL_TIMER_ID)
+                    .setSmallIcon(R.drawable.ic_timer)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setCategory(NotificationCompat.CATEGORY_ALARM)
+                    .build();
+            notificationManager.notify(1, notification);
             cancelTimer();
         }
 
     }
 
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(broadcastReceiver);
-    }
 
 }
 
