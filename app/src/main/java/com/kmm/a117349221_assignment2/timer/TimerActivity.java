@@ -1,4 +1,4 @@
-package com.kmm.a117349221_assignment2;
+package com.kmm.a117349221_assignment2.timer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +18,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.kmm.a117349221_assignment2.timer.TimerService;
+import com.kmm.a117349221_assignment2.IConstants;
+import com.kmm.a117349221_assignment2.R;
+import com.kmm.a117349221_assignment2.clock.ClockActivity;
 
 import java.util.Locale;
 

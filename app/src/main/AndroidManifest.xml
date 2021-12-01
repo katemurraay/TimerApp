@@ -9,8 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.117349221_Assignment2">
-        <activity android:name=".TimerActivity"></activity>
-        <activity android:name=".ClockActivity">
+        <activity android:name=".timer.TimerActivity"></activity>
+        <activity android:name=".clock.ClockActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

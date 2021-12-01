@@ -1,34 +1,25 @@
-package com.kmm.a117349221_assignment2;
+package com.kmm.a117349221_assignment2.clock;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Lifecycle;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.SurfaceView;
-import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
-import com.kmm.a117349221_assignment2.clock.ClockSurfaceView;
+import com.kmm.a117349221_assignment2.R;
+import com.kmm.a117349221_assignment2.timer.TimerActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Vector;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ClockActivity extends AppCompatActivity {
 
@@ -38,6 +29,8 @@ public class ClockActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private TextView tvTime;
     private Calendar c;
+    private Timer timer;
+    private TimerTask timerTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +44,28 @@ public class ClockActivity extends AppCompatActivity {
        bottomNavigationView.setSelectedItemId(R.id.nav_clock);
        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
        tvTime = findViewById(R.id.tvTime);
-       c =  Calendar.getInstance();
-       int hour = c.get(Calendar.HOUR_OF_DAY);
-       int min = c.get(Calendar.MINUTE);
-       String time;
-       if(min>10) {
-          time = String.valueOf(hour) + " : " + String.valueOf(min);
-       } else{
-           time = String.valueOf(hour) + " : 0" + String.valueOf(min);
 
-       }
-       tvTime.setText(time);
+
+
+//https://stackoverflow.com/a/4776556
+      timer = new Timer();
+      timerTask = new TimerTask() {
+            @Override
+            public void run() {
+               c = Calendar.getInstance();
+               Date time = c.getTime();
+                String pattern = "HH:mm";
+                SimpleDateFormat dateFormat =  new SimpleDateFormat(pattern);
+                String strTime = dateFormat.format(time);
+                tvTime.setText(strTime);
+
+                Log.d("VIEWMODEL", "CALLED");
+            }
+        };
+        timer.schedule(timerTask, 0, 10000);
+
+
+
 
 
 
@@ -85,11 +89,13 @@ public class ClockActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         clock.onResumeClock();
+
     }
     @Override
     protected void onPause(){
         super.onPause();
         clock.onPauseClock();
+        timer.cancel();
     }
 
 
