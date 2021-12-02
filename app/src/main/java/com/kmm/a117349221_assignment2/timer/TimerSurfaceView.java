@@ -20,13 +20,14 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
     private boolean running= false;
     private SurfaceHolder holder;
     private long time;
+    private long timeSet;
 
-
-    public TimerSurfaceView(Context context, float length, long time) {
+    public TimerSurfaceView(Context context, float length, long time, long timeSet) {
         super(context);
         this.length = length;
         holder = getHolder();
         this.time =time;
+        this.timeSet = timeSet;
 
 
     }
@@ -67,23 +68,25 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
                 Paint backPaint = new Paint();
                 backPaint.setColor(Color.BLACK);
                 canvas.drawPaint(backPaint);
-                Paint forePaint = new Paint();
-                forePaint.setColor(Color.BLUE);
-                forePaint.setStyle(Paint.Style.STROKE);
-                forePaint.setStrokeWidth(5f);
                 Paint paint = new Paint();
                 paint.setColor(Color.WHITE);
-                paint.setTextSize(28);
+                paint.setTextSize(60f);
                 //paint.setTypeface(typeface);
                 paint.setTextAlign(Paint.Align.CENTER);
-
+                Paint arcPaint = new Paint();
+                arcPaint.setColor(Color.GREEN);
+                arcPaint.setStyle(Paint.Style.STROKE);
+                arcPaint.setStrokeWidth(5f);
                 //draw circle
 
-                  RegPoly timer = new RegPoly(60, getWidth()/2, getHeight()/2, length, canvas, forePaint);
                   RegPoly text = new RegPoly(60, getWidth()/2, getHeight()/2, length, canvas, paint);
+                  RegPoly arc = new RegPoly(60, getWidth()/2, getHeight()/2, length, canvas, arcPaint);
+                  long millisLeft = time- System.currentTimeMillis();
 
-                  long millisLeft = time;
                   if(millisLeft>=0){
+                      float flTimerLeft = (float) millisLeft;
+                      float angleDegree=  ((timeSet - flTimerLeft)/timeSet) * 360;
+                      Log.d("TimeLEFt", String.valueOf(angleDegree));
                   int hours   = (int) ((millisLeft / (1000*60*60)) % 24);
                   int minutes = (int) (millisLeft / (1000*60)) % 60;
                   int seconds = (int) (millisLeft / 1000) % 60;
@@ -94,9 +97,11 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
                     timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
 
                   }
+                    arc.drawArc(angleDegree, (int) length, 45);
                     text.drawText(timeLeftFormatted);
 
-                  }     timer.drawCircle(length);
+
+                  }
 
 
 

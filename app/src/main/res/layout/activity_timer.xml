@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:background="@color/black"
-    android:id="@+id/flTimer"
-    android:layout_height="match_parent"
-    tools:context=".timer.TimerActivity">
+
+
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:id="@+id/rlTimerParent"
-        android:layout_height="match_parent">
-    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".timer.TimerActivity"
+        android:background="@color/black"
         android:id="@+id/rlTimer"
         android:layout_width="match_parent"
-        android:layout_above="@id/bottom_navigation"
         android:layout_height="match_parent"
         >
         <LinearLayout
@@ -91,46 +85,9 @@ android:id="@+id/btnStart"
     android:layout_below="@+id/llTime"/>
 
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:background="@color/black"
-        android:layout_above="@id/bottom_navigation"
-        android:layout_height="match_parent"
-        android:id="@+id/rlTimerSet"
-        >
-        <TextView
-            android:textColor="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvTimeLeft"
-            android:textSize="22sp"
-            android:textAlignment="center"
-            android:layout_margin="10dp"
-            android:padding="20dp"
-            android:layout_centerInParent="true"/>
-
-        <Button
-            android:layout_below="@+id/tvTimeLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_margin="10dp"
-            android:text="@string/btn_cancel"
-            android:id="@+id/btnCancel"/>
-        <Button
-            android:layout_below="@+id/tvTimeLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="@string/btn_pause"
-            android:layout_alignParentEnd="true"
-            android:id="@+id/btnPauseResume"/>
 
 
 
-    </RelativeLayout>
         <com.google.android.material.bottomnavigation.BottomNavigationView
 
             android:id="@+id/bottom_navigation"
@@ -143,4 +100,3 @@ android:id="@+id/btnStart"
             android:background="@drawable/bottom_nav_shape"
             />
     </RelativeLayout>
-</FrameLayout>

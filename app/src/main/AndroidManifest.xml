@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.117349221_Assignment2">
-        <activity android:name=".timer.PracticeActivity">
+        <activity android:name=".timer.TimerSetActivity">
 
         </activity>
         <activity android:name=".timer.TimerActivity" />

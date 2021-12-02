@@ -4,16 +4,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.kmm.a117349221_assignment2.IConstants;
 import com.kmm.a117349221_assignment2.R;
 import com.kmm.a117349221_assignment2.timer.TimerActivity;
+import com.kmm.a117349221_assignment2.timer.TimerService;
+import com.kmm.a117349221_assignment2.timer.TimerSetActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,7 +38,7 @@ public class ClockActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_clock);
 
         clock = new ClockSurfaceView(this, 300);
         frameLayout = findViewById(R.id.frame_layout);
@@ -110,7 +113,13 @@ public class ClockActivity extends AppCompatActivity {
 
                             break;
                         case R.id.nav_timer:
-                            Intent intent = new Intent(ClockActivity.this, TimerActivity.class);
+                            SharedPreferences preferences = getSharedPreferences(IConstants.TIMER_PREFERENCES, MODE_PRIVATE);
+                           Intent intent;
+                            if(preferences.getBoolean(IConstants.TIMER_RUNNING, false)) {
+                                intent = new Intent(ClockActivity.this, TimerSetActivity.class);
+                            } else{
+                                intent = new Intent(ClockActivity.this, TimerActivity.class);
+                            }
                             startActivity(intent);
                              overridePendingTransition(0,0);
                              finish();

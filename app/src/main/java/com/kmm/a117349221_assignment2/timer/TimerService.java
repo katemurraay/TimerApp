@@ -4,15 +4,12 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import com.kmm.a117349221_assignment2.IConstants;
-
-import java.util.Calendar;
 
 public class TimerService extends Service {
     private final static String TAG = "TimerService";
@@ -40,8 +37,8 @@ public class TimerService extends Service {
         mpref = getSharedPreferences(IConstants.TIMER_PREFERENCES, MODE_PRIVATE);
         editor = mpref.edit();
 
-        long millis = mpref.getLong(IConstants.MILLIS_LEFT, 1000);
-         Log.d("MILLIS", String.valueOf(millis));
+        long millis = mpref.getLong(IConstants.TIME_SET, 1000);
+
         cdt = new CountDownTimer(millis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -50,14 +47,14 @@ public class TimerService extends Service {
                 long endtime = System.currentTimeMillis() + millisUntilFinished;
                 editor.putLong(IConstants.END_TIME, endtime).apply();
                 bi.putExtra(IConstants.TIME_LEFT, millisUntilFinished);
-                bi.putExtra(IConstants.IS_RUNNING, true);
+                bi.putExtra(IConstants.TIMER_STATE, true);
                 sendBroadcast(bi);
             }
 
 
             @Override
             public void onFinish() {
-                bi.putExtra(IConstants.IS_RUNNING, false);
+                bi.putExtra(IConstants.TIMER_STATE, false);
                 sendBroadcast(bi);
                 Log.i(TAG, "Timer finished");
             }
@@ -69,7 +66,7 @@ public class TimerService extends Service {
     @Override
     public void onDestroy() {
         cdt.cancel();
-        editor.putLong(IConstants.PAUSED_TIME, timeLeft).apply();
+        editor.putLong(IConstants.TIME_AT_PAUSE, timeLeft).apply();
 
         super.onDestroy();
     }
