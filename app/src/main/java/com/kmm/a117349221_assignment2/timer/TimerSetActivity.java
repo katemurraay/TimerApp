@@ -102,7 +102,6 @@ TimerSurfaceView timer = null;
 
         if(isRunning){
              timerRunning = true;
-
         } else{
             //set notification
             timerRunning =false;
@@ -123,7 +122,7 @@ TimerSurfaceView timer = null;
     }
         private void resumeTimer(){
             //https://gist.github.com/codinginflow/61e9cec706e7fe94b0ca3fffc0253bf2
-            timer.onResumeTimer();
+
             SharedPreferences prefs = getSharedPreferences(TIMER_PREFERENCES, MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             long millisLeft = prefs.getLong(TIME_AT_PAUSE, 1000);
@@ -138,6 +137,8 @@ TimerSurfaceView timer = null;
             startService(intent);
             btnPause.setText(getResources().getString(R.string.btn_pause));
             timerPaused = false;
+            timer.setTime(endTime, millisLeft);
+            timer.onResumeTimer();
 
 
 

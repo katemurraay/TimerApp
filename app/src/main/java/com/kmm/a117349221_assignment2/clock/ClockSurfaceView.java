@@ -64,6 +64,12 @@ public class ClockSurfaceView extends SurfaceView implements Runnable {
                 Paint forePaint = new Paint();
                 forePaint.setColor(Color.WHITE);
                 forePaint.setStrokeWidth(2f);
+                Paint secPaint = new Paint();
+                secPaint.setColor(Color.RED);
+                secPaint.setStrokeWidth(1.5f);
+                Paint milliPaint = new Paint();
+                milliPaint.setColor(Color.GRAY);
+                milliPaint.setStrokeWidth(1.5f);
 
 
                 //draw the marks
@@ -86,10 +92,10 @@ public class ClockSurfaceView extends SurfaceView implements Runnable {
                 }
                 //make 3 reg polys for the hands
                 forePaint.setStrokeWidth(5f);
-                RegPoly secHand = new RegPoly(60, getWidth()/2, getHeight()/2, length+10, canvas, forePaint);
-                RegPoly minHand = new RegPoly(60, getWidth()/2, getHeight()/2, length-60, canvas, forePaint);
-                RegPoly hourHand = new RegPoly(60, getWidth()/2, getHeight()/2, length-100, canvas, forePaint);
-                RegPoly milliHand = new RegPoly(60,  7 *getWidth()/20, 11 *getHeight()/20, length-220, canvas, forePaint);
+                RegPoly secHand = new RegPoly(60, getWidth()/2, getHeight()/2, length-20, canvas, secPaint);
+                RegPoly minHand = new RegPoly(60, getWidth()/2, getHeight()/2, length+20, canvas, forePaint);
+                RegPoly hourHand = new RegPoly(60, getWidth()/2, getHeight()/2, length-130, canvas, forePaint);
+                RegPoly milliHand = new RegPoly(60,  7 *getWidth()/20, 11 *getHeight()/20, length-220, canvas, milliPaint);
                //get hour, min, sec from calender
                 Calendar calendar = Calendar.getInstance();
                 hour = calendar.get(Calendar.HOUR);

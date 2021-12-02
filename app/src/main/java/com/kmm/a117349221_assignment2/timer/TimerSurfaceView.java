@@ -64,7 +64,7 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
             if (holder.getSurface().isValid()){
                 //get canvas
                 Canvas canvas = holder.lockCanvas();
-                //draw the clock
+                //draw the timer
                 Paint backPaint = new Paint();
                 backPaint.setColor(Color.BLACK);
                 canvas.drawPaint(backPaint);
@@ -76,8 +76,8 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
                 Paint arcPaint = new Paint();
                 arcPaint.setColor(Color.GREEN);
                 arcPaint.setStyle(Paint.Style.STROKE);
-                arcPaint.setStrokeWidth(5f);
-                //draw circle
+                arcPaint.setStrokeWidth(15f);
+
 
                   RegPoly text = new RegPoly(60, getWidth()/2, getHeight()/2, length, canvas, paint);
                   RegPoly arc = new RegPoly(60, getWidth()/2, getHeight()/2, length, canvas, arcPaint);
@@ -86,17 +86,17 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
                   if(millisLeft>=0){
                       float flTimerLeft = (float) millisLeft;
                       float angleDegree=  ((timeSet - flTimerLeft)/timeSet) * 360;
-                      Log.d("TimeLEFt", String.valueOf(angleDegree));
-                  int hours   = (int) ((millisLeft / (1000*60*60)) % 24);
-                  int minutes = (int) (millisLeft / (1000*60)) % 60;
-                  int seconds = (int) (millisLeft / 1000) % 60;
-                  String timeLeftFormatted = new String();
-                  if(hours ==0) {
-                    timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
-                  } else{
-                    timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
 
-                  }
+                      int hours   = (int) ((millisLeft / (1000*60*60)) % 24);
+                      int minutes = (int) (millisLeft / (1000*60)) % 60;
+                      int seconds = (int) (millisLeft / 1000) % 60;
+                      String timeLeftFormatted;
+                      if(hours ==0) {
+                        timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+                      } else{
+                        timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
+
+                      }
                     arc.drawArc(angleDegree, (int) length, 45);
                     text.drawText(timeLeftFormatted);
 
@@ -118,5 +118,10 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
                 holder.unlockCanvasAndPost(canvas);
             }
         }
+    }
+
+    public void setTime(long time, long timeSet){
+        this.time = time;
+        this.timeSet = timeSet;
     }
 }

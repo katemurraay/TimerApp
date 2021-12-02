@@ -67,7 +67,9 @@ public class TimerActivity extends AppCompatActivity {
             int min = Integer.parseInt(mins[spMins.getSelectedItemPosition()]);
             int sec = Integer.parseInt(mins[spSeconds.getSelectedItemPosition()]);
             int hour = Integer.parseInt(hours[spHours.getSelectedItemPosition()]);
+
             sec = sec +1;
+
             setTimer(hour, min, sec);
 
         });
@@ -119,7 +121,7 @@ public class TimerActivity extends AppCompatActivity {
         timerRunning = true;
 
         editor = prefs.edit();
-        if(millisLeft>0) {
+        if(millisLeft>1000) {
             editor.putLong(TIME_SET, millisLeft).apply();
             editor.putLong(END_TIME, endTimer).apply();
             editor.putBoolean(TIMER_RUNNING, timerRunning).commit();
