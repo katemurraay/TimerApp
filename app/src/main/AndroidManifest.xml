@@ -10,10 +10,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.117349221_Assignment2">
-        <activity android:name=".timer.TimerSetActivity">
+        <activity android:name=".timer.TimerSetActivity"
+            android:launchMode="singleTask">
 
         </activity>
-        <activity android:name=".timer.TimerActivity" />
+        <activity android:name=".timer.TimerActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".clock.ClockActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +24,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".timer.TimerService" />
+        <service android:name=".timer.TimerService"
+          />
     </application>
 
 </manifest>
