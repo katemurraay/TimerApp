@@ -56,10 +56,7 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
 
     @Override
     public void run() {
-        int sec =0;
-        int minute =0;
-        int hour =0;
-        int milliseconds =0;
+
         while (running){
             if (holder.getSurface().isValid()){
                 //get canvas
@@ -77,10 +74,18 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
                 arcPaint.setColor(Color.GREEN);
                 arcPaint.setStyle(Paint.Style.STROKE);
                 arcPaint.setStrokeWidth(15f);
+                Paint backArcPaint = new Paint();
+                backArcPaint.setColor(Color.GRAY);
+                backArcPaint.setStyle(Paint.Style.STROKE);
+                backArcPaint.setStrokeWidth(15f);
+                backArcPaint.isAntiAlias();
 
 
-                  RegPoly text = new RegPoly(60, getWidth()/2, getHeight()/2, length, canvas, paint);
+
+
+                RegPoly text = new RegPoly(60, getWidth()/2, getHeight()/2, length, canvas, paint);
                   RegPoly arc = new RegPoly(60, getWidth()/2, getHeight()/2, length, canvas, arcPaint);
+                  RegPoly backgroundArc = new RegPoly(60, getWidth()/2, getHeight()/2, length, canvas, backArcPaint);
                   long millisLeft = time- System.currentTimeMillis();
 
                   if(millisLeft>=0){
@@ -97,7 +102,9 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
                         timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
 
                       }
-                    arc.drawArc(angleDegree, (int) length, 45);
+                      backgroundArc.drawArc(360, (int) length, 45);
+                      arc.drawArc(angleDegree, (int) length, 45);
+
                     text.drawText(timeLeftFormatted);
 
 

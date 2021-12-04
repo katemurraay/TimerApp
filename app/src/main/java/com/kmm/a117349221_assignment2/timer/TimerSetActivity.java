@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kmm.a117349221_assignment2.IConstants;
@@ -41,6 +44,7 @@ TimerSurfaceView timer = null;
     private FrameLayout flTimer;
     private RelativeLayout rlTimerSet;
     private BottomNavigationView bottomNavigationView;
+    private AlarmManager alarmManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,16 +111,17 @@ TimerSurfaceView timer = null;
             timerRunning =false;
             String title = "TIMER";
             String message= "Timer Completed";
-
-            Notification notification = new NotificationCompat.Builder(this, CHANNEL_TIMER_ID)
+//https://gist.github.com/codinginflow/33e2ef8270892acca1ce7cab955ee3d3
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, IConstants.CHANNEL_TIMER_ID)
                     .setSmallIcon(R.drawable.ic_timer)
                     .setContentTitle(title)
                     .setContentText(message)
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setCategory(NotificationCompat.CATEGORY_ALARM)
-                    .build();
-            notificationManager.notify(1, notification);
-            cancelTimer();
+                    .setAutoCancel(true)
+                    .setDefaults(NotificationCompat.DEFAULT_ALL)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH);
+            NotificationManagerCompat notificationCompat = NotificationManagerCompat.from(this);
+            notificationCompat.notify(123, builder.build());
+             cancelTimer();
         }
         editor.putBoolean(TIMER_RUNNING, timerRunning).apply();
     }
@@ -178,6 +183,8 @@ TimerSurfaceView timer = null;
 
         }
 
+
+
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -208,5 +215,6 @@ TimerSurfaceView timer = null;
         SharedPreferences preferences = getSharedPreferences(TIMER_PREFERENCES, MODE_PRIVATE);
         timerRunning = preferences.getBoolean(TIMER_RUNNING, false);
         timerPaused = preferences.getBoolean(TIMER_PAUSED, false);
+
     }
 }

@@ -32,7 +32,10 @@ public class TimerService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "Starting timer...");
-        //https://deepshikhapuri.wordpress.com/2016/11/07/android-countdown-timer-run-in-background/
+        /*Code below is based on:
+        Web Article: "Android Countdown Timer Run In Background",
+        https://deepshikhapuri.wordpress.com/2016/11/07/android-countdown-timer-run-in-background/
+         */
 
         mpref = getSharedPreferences(IConstants.TIMER_PREFERENCES, MODE_PRIVATE);
         editor = mpref.edit();
@@ -42,10 +45,9 @@ public class TimerService extends Service {
         cdt = new CountDownTimer(millis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.i(TAG, "Countdown seconds remaining: " + millisUntilFinished / 1000);
                 timeLeft = millisUntilFinished;
-                long endtime = System.currentTimeMillis() + millisUntilFinished;
-                editor.putLong(IConstants.END_TIME, endtime).apply();
+                long endTime = System.currentTimeMillis() + millisUntilFinished;
+                editor.putLong(IConstants.END_TIME, endTime).apply();
                 bi.putExtra(IConstants.TIME_LEFT, millisUntilFinished);
                 bi.putExtra(IConstants.TIMER_STATE, true);
                 sendBroadcast(bi);
@@ -61,13 +63,12 @@ public class TimerService extends Service {
         };
 
                     cdt.start();
-
+        //END
     }
     @Override
     public void onDestroy() {
         cdt.cancel();
         editor.putLong(IConstants.TIME_AT_PAUSE, timeLeft).apply();
-
         super.onDestroy();
     }
 
