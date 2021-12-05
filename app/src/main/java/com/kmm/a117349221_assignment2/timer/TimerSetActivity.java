@@ -36,15 +36,15 @@ import static com.kmm.a117349221_assignment2.IConstants.TIME_AT_PAUSE;
 import static com.kmm.a117349221_assignment2.IConstants.TIME_SET;
 
 public class TimerSetActivity extends AppCompatActivity {
-TimerSurfaceView timer = null;
+    TimerSurfaceView timer = null;
 
-    private NotificationManagerCompat notificationManager;
+
     private Boolean timerRunning, timerPaused;
     private Button btnPause, btnCancel;
     private FrameLayout flTimer;
     private RelativeLayout rlTimerSet;
     private BottomNavigationView bottomNavigationView;
-    private AlarmManager alarmManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,11 +66,12 @@ TimerSurfaceView timer = null;
         btnCancel.setOnClickListener((v)->{
             cancelTimer();
         });
-        notificationManager = NotificationManagerCompat.from(this);
+
         SharedPreferences preferences = getSharedPreferences(IConstants.TIMER_PREFERENCES, MODE_PRIVATE);
-        long endTime = preferences.getLong(IConstants.END_TIME, 0);
-        long millisLeft = endTime - System.currentTimeMillis();
-        timer = new TimerSurfaceView(this, 350, endTime, millisLeft);
+        long millisLeft = preferences.getLong(IConstants.END_TIME, 0);;
+        long endTime = millisLeft + System.currentTimeMillis();
+
+        timer = new TimerSurfaceView(this, 350, endTime);
         flTimer.removeAllViews();
         flTimer.addView(timer);
         flTimer.addView(rlTimerSet);
@@ -140,23 +141,26 @@ TimerSurfaceView timer = null;
             editor.putLong(TIME_SET, millisLeft).apply();
             Intent intent = new Intent(getApplicationContext(), TimerService.class);
             startService(intent);
-            btnPause.setText(getResources().getString(R.string.btn_pause));
             timerPaused = false;
-            timer.setTime(endTime, millisLeft);
+            timer.setTime(endTime);
             timer.onResumeTimer();
+            updateButtons(false);
+                    }
 
 
-
+         private  void updateButtons(boolean pause){
+        if(pause){
+            btnPause.setText(getResources().getString(R.string.btn_restart));
+        } else{
+            btnPause.setText(getResources().getString(R.string.btn_pause));
 
         }
-
+                    }
         private void pauseTime(){
             SharedPreferences prefs = getSharedPreferences(TIMER_PREFERENCES, MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
-            long timeLeft = prefs.getLong(END_TIME, 0);
-            timeLeft = timeLeft - System.currentTimeMillis();
-            Log.d("pauseTime", String.valueOf(timeLeft));
-            btnPause.setText(getResources().getString(R.string.btn_restart));
+            long millisLeft = prefs.getLong(END_TIME, 0);
+            long timeLeft = millisLeft - System.currentTimeMillis();
             timerPaused = true;
             Intent intent = new Intent(getApplicationContext(), TimerService.class);
             stopService(intent);
@@ -164,8 +168,9 @@ TimerSurfaceView timer = null;
             editor.putBoolean(TIMER_RUNNING, true).apply();
             editor.putBoolean(TIMER_PAUSED, timerPaused).apply();
             editor.putLong(TIME_AT_PAUSE, timeLeft).apply();
+            editor.putLong(END_TIME, millisLeft).apply();
             timer.onPauseTimer();
-
+            updateButtons(true);
 
         }
 
@@ -215,6 +220,6 @@ TimerSurfaceView timer = null;
         SharedPreferences preferences = getSharedPreferences(TIMER_PREFERENCES, MODE_PRIVATE);
         timerRunning = preferences.getBoolean(TIMER_RUNNING, false);
         timerPaused = preferences.getBoolean(TIMER_PAUSED, false);
-
+        updateButtons(timerPaused);
     }
 }

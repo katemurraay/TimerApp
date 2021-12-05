@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.kmm.a117349221_assignment2.IConstants;
+import com.kmm.a117349221_assignment2.R;
 import com.kmm.a117349221_assignment2.RegPoly;
 
 import java.util.Calendar;
@@ -20,16 +22,18 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
     private boolean running= false;
     private SurfaceHolder holder;
     private long time;
-    private long timeSet;
 
-    public TimerSurfaceView(Context context, float length, long time, long timeSet) {
+    private int colourGrey;
+    private long originalTime;
+
+    public TimerSurfaceView(Context context, float length, long time) {
         super(context);
         this.length = length;
         holder = getHolder();
         this.time =time;
-        this.timeSet = timeSet;
-
-
+        colourGrey = context.getResources().getColor(R.color.dark_grey);
+        SharedPreferences preferences = context.getSharedPreferences(IConstants.STATIC_TIMER, Context.MODE_PRIVATE);
+        originalTime = preferences.getLong(IConstants.STATIC_TIME, 1000);
     }
 
 
@@ -39,6 +43,7 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
         thread.start();
         running = true;
     }
+
 
     public void  onPauseTimer() {
         running = false;
@@ -56,11 +61,12 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
 
     @Override
     public void run() {
-
+    invalidate();
+    Log.d("ORIGINAL TIME", String.valueOf(originalTime));
         while (running){
             if (holder.getSurface().isValid()){
                 //get canvas
-                Canvas canvas = holder.lockCanvas();
+                Canvas canvas = holder.lockCanvas(null);
                 //draw the timer
                 Paint backPaint = new Paint();
                 backPaint.setColor(Color.BLACK);
@@ -68,29 +74,29 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
                 Paint paint = new Paint();
                 paint.setColor(Color.WHITE);
                 paint.setTextSize(60f);
-                //paint.setTypeface(typeface);
                 paint.setTextAlign(Paint.Align.CENTER);
                 Paint arcPaint = new Paint();
                 arcPaint.setColor(Color.GREEN);
                 arcPaint.setStyle(Paint.Style.STROKE);
-                arcPaint.setStrokeWidth(15f);
+                arcPaint.setStrokeWidth(35f);
+                arcPaint.isAntiAlias();
                 Paint backArcPaint = new Paint();
-                backArcPaint.setColor(Color.GRAY);
+                backArcPaint.setColor(colourGrey);
                 backArcPaint.setStyle(Paint.Style.STROKE);
-                backArcPaint.setStrokeWidth(15f);
+                backArcPaint.setStrokeWidth(35f);
                 backArcPaint.isAntiAlias();
 
 
 
 
-                RegPoly text = new RegPoly(60, getWidth()/2, getHeight()/2, length, canvas, paint);
+                  RegPoly text = new RegPoly(60, getWidth()/2, getHeight()/2, length, canvas, paint);
                   RegPoly arc = new RegPoly(60, getWidth()/2, getHeight()/2, length, canvas, arcPaint);
                   RegPoly backgroundArc = new RegPoly(60, getWidth()/2, getHeight()/2, length, canvas, backArcPaint);
                   long millisLeft = time- System.currentTimeMillis();
 
                   if(millisLeft>=0){
                       float flTimerLeft = (float) millisLeft;
-                      float angleDegree=  ((timeSet - flTimerLeft)/timeSet) * 360;
+                      float angleDegree=  ((originalTime - flTimerLeft)/originalTime) * 360;
 
                       int hours   = (int) ((millisLeft / (1000*60*60)) % 24);
                       int minutes = (int) (millisLeft / (1000*60)) % 60;
@@ -127,8 +133,8 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
         }
     }
 
-    public void setTime(long time, long timeSet){
+    public void setTime(long time){
         this.time = time;
-        this.timeSet = timeSet;
+
     }
 }

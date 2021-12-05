@@ -14,12 +14,15 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.kmm.a117349221_assignment2.IConstants;
 import com.kmm.a117349221_assignment2.R;
 import com.kmm.a117349221_assignment2.clock.ClockActivity;
 
 import java.util.Locale;
 
 import static com.kmm.a117349221_assignment2.IConstants.END_TIME;
+import static com.kmm.a117349221_assignment2.IConstants.STATIC_TIME;
+import static com.kmm.a117349221_assignment2.IConstants.STATIC_TIMER;
 import static com.kmm.a117349221_assignment2.IConstants.TIME_SET;
 
 import static com.kmm.a117349221_assignment2.IConstants.TIMER_PREFERENCES;
@@ -115,16 +118,20 @@ public class TimerActivity extends AppCompatActivity {
         long milliMins = mins * 60 * 1000;
         long milliSecs = secs * 1000;
         long millisLeft = milliHours + milliMins + milliSecs;
-        long endTimer= millisLeft + System.currentTimeMillis();
+
         SharedPreferences prefs = getSharedPreferences(TIMER_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences staticPrefs = getSharedPreferences(STATIC_TIMER, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
+        SharedPreferences.Editor editor1 = staticPrefs.edit();
         timerRunning = true;
 
         editor = prefs.edit();
         if(millisLeft>1000) {
             editor.putLong(TIME_SET, millisLeft).apply();
-            editor.putLong(END_TIME, endTimer).apply();
-            editor.putBoolean(TIMER_RUNNING, timerRunning).commit();
+            editor.putLong(END_TIME, millisLeft).apply();
+            editor.putBoolean(TIMER_RUNNING, timerRunning).apply();
+            editor1.putLong(STATIC_TIME, millisLeft).apply();
+
             Intent intent = new Intent(getApplicationContext(), TimerService.class);
             startService(intent);
             Intent activity = new Intent(TimerActivity.this, TimerSetActivity.class);

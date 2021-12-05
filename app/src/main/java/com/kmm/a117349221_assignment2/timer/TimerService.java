@@ -46,8 +46,8 @@ public class TimerService extends Service {
             @Override
             public void onTick(long millisUntilFinished) {
                 timeLeft = millisUntilFinished;
-                long endTime = System.currentTimeMillis() + millisUntilFinished;
-                editor.putLong(IConstants.END_TIME, endTime).apply();
+
+                editor.putLong(IConstants.END_TIME, millisUntilFinished).apply();
                 bi.putExtra(IConstants.TIME_LEFT, millisUntilFinished);
                 bi.putExtra(IConstants.TIMER_STATE, true);
                 sendBroadcast(bi);
