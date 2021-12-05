@@ -23,29 +23,40 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
     private SurfaceHolder holder;
     private long time;
 
-    private int colourGrey;
+    private int[] colourArray;
     private long originalTime;
+    private SharedPreferences preferences;
 
     public TimerSurfaceView(Context context, float length, long time) {
         super(context);
         this.length = length;
         holder = getHolder();
         this.time =time;
-        colourGrey = context.getResources().getColor(R.color.dark_grey);
-        SharedPreferences preferences = context.getSharedPreferences(IConstants.STATIC_TIMER, Context.MODE_PRIVATE);
+        colourArray = context.getResources().getIntArray(R.array.timer_colours);
+        preferences = context.getSharedPreferences(IConstants.STATIC_TIMER, Context.MODE_PRIVATE);
         originalTime = preferences.getLong(IConstants.STATIC_TIME, 1000);
     }
 
 
     //methods to manage the thread
-    public void onResumeTimer(){
+    public void onResumeTimer(boolean paused){
+        SharedPreferences.Editor editor = preferences.edit();
         thread = new Thread(this);
+     
+        if(paused){
+            running = false;
+            editor.putBoolean(IConstants.IMAGE_IN_VIEW, false).apply();
+         } else{
         thread.start();
         running = true;
+        editor.putBoolean(IConstants.IMAGE_IN_VIEW, true).apply();
+        }
+
     }
 
 
     public void  onPauseTimer() {
+
         running = false;
         boolean retry = true;
         while (retry){
@@ -56,34 +67,37 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
                 e.printStackTrace();
             }
         }
+
     }
 
 
     @Override
     public void run() {
-    invalidate();
-    Log.d("ORIGINAL TIME", String.valueOf(originalTime));
+     Log.d("ORIGINAL TIME", String.valueOf(originalTime));
+
         while (running){
             if (holder.getSurface().isValid()){
+
+
                 //get canvas
-                Canvas canvas = holder.lockCanvas(null);
+                Canvas canvas = holder.lockCanvas();
                 //draw the timer
                 Paint backPaint = new Paint();
                 backPaint.setColor(Color.BLACK);
                 canvas.drawPaint(backPaint);
                 Paint paint = new Paint();
-                paint.setColor(Color.WHITE);
-                paint.setTextSize(60f);
+                paint.setColor(colourArray[2]);
+                paint.setTextSize(120f);
                 paint.setTextAlign(Paint.Align.CENTER);
                 Paint arcPaint = new Paint();
-                arcPaint.setColor(Color.GREEN);
+                arcPaint.setColor(colourArray[1]);
                 arcPaint.setStyle(Paint.Style.STROKE);
-                arcPaint.setStrokeWidth(35f);
+                arcPaint.setStrokeWidth(40f);
                 arcPaint.isAntiAlias();
                 Paint backArcPaint = new Paint();
-                backArcPaint.setColor(colourGrey);
+                backArcPaint.setColor(colourArray[0]);
                 backArcPaint.setStyle(Paint.Style.STROKE);
-                backArcPaint.setStrokeWidth(35f);
+                backArcPaint.setStrokeWidth(45f);
                 backArcPaint.isAntiAlias();
 
 

@@ -7,10 +7,17 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="dark_grey">	 #333333</color>
+    <color name="dark_grey">	#262626</color>
     <color name="green">	 #00e600</color>
     <color name="grey">#595959</color>
     <color name="orange"> #ff5500</color>
+    <color name="blue">#0000ff</color>
+
+    <array name="timer_colours">
+        <item>@color/dark_grey</item>
+        <item>@color/green</item>
+        <item>@color/white</item>
+    </array>
 
 
 </resources>

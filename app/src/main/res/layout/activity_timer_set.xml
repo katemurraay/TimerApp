@@ -11,6 +11,16 @@
         android:layout_height="match_parent"
         android:id="@+id/rlTimerSet"
         >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvTimer"
+            android:textColor="@color/white"
+            android:layout_centerInParent="true"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:textSize="45sp"
+            android:textAlignment="center"/>
 
 
         <Button
@@ -20,7 +30,8 @@
             android:layout_above="@+id/bottom_navigation"
             android:layout_margin="20dp"
             android:text="@string/btn_cancel"
-            android:background="@drawable/button_pause_shape"
+            android:background="@drawable/button_cancel_shape"
+            android:backgroundTint="@color/dark_grey"
             android:id="@+id/btnCancel"/>
         <Button
 
@@ -28,9 +39,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/btn_pause"
+            android:backgroundTint="@color/orange"
             android:layout_above="@+id/bottom_navigation"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/button_cancel_shape"
+            android:background="@drawable/button_pause_shape"
             android:id="@+id/btnPauseResume"/>
 
 

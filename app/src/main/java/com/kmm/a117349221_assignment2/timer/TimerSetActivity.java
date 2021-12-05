@@ -16,9 +16,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -26,8 +28,13 @@ import com.kmm.a117349221_assignment2.IConstants;
 import com.kmm.a117349221_assignment2.R;
 import com.kmm.a117349221_assignment2.clock.ClockActivity;
 
+import java.util.Locale;
+import java.util.function.LongBinaryOperator;
+
 import static com.kmm.a117349221_assignment2.IConstants.CHANNEL_TIMER_ID;
 import static com.kmm.a117349221_assignment2.IConstants.END_TIME;
+import static com.kmm.a117349221_assignment2.IConstants.IMAGE_IN_VIEW;
+import static com.kmm.a117349221_assignment2.IConstants.STATIC_TIMER;
 import static com.kmm.a117349221_assignment2.IConstants.TIMER_PAUSED;
 import static com.kmm.a117349221_assignment2.IConstants.TIMER_PREFERENCES;
 import static com.kmm.a117349221_assignment2.IConstants.TIMER_RUNNING;
@@ -39,11 +46,14 @@ public class TimerSetActivity extends AppCompatActivity {
     TimerSurfaceView timer = null;
 
 
-    private Boolean timerRunning, timerPaused;
+    private Boolean timerRunning, timerPaused, imageTimer;
     private Button btnPause, btnCancel;
     private FrameLayout flTimer;
     private RelativeLayout rlTimerSet;
     private BottomNavigationView bottomNavigationView;
+    private TextView tvTimer;
+    private long millisLeft;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +66,11 @@ public class TimerSetActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_timer);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+        tvTimer = findViewById(R.id.tvTimer);
         btnPause.setOnClickListener((v)->{
             if(timerPaused){
                 resumeTimer();
+                updateTextView(true);
             } else{
                 pauseTime();
             }
@@ -68,7 +80,7 @@ public class TimerSetActivity extends AppCompatActivity {
         });
 
         SharedPreferences preferences = getSharedPreferences(IConstants.TIMER_PREFERENCES, MODE_PRIVATE);
-        long millisLeft = preferences.getLong(IConstants.END_TIME, 0);;
+        millisLeft = preferences.getLong(IConstants.END_TIME, 0);
         long endTime = millisLeft + System.currentTimeMillis();
 
         timer = new TimerSurfaceView(this, 350, endTime);
@@ -82,7 +94,7 @@ public class TimerSetActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        timer.onResumeTimer();
+        timer.onResumeTimer(timerPaused);
         registerReceiver(broadcastReceiver, new IntentFilter(TimerService.COUNTDOWN_BR));
 
     }
@@ -131,7 +143,7 @@ public class TimerSetActivity extends AppCompatActivity {
 
             SharedPreferences prefs = getSharedPreferences(TIMER_PREFERENCES, MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
-            long millisLeft = prefs.getLong(TIME_AT_PAUSE, 1000);
+            millisLeft = prefs.getLong(TIME_AT_PAUSE, 1000);
             long endTime = millisLeft + System.currentTimeMillis();
             editor = prefs.edit();
             editor.clear().apply();
@@ -143,7 +155,7 @@ public class TimerSetActivity extends AppCompatActivity {
             startService(intent);
             timerPaused = false;
             timer.setTime(endTime);
-            timer.onResumeTimer();
+            timer.onResumeTimer(timerPaused);
             updateButtons(false);
                     }
 
@@ -151,15 +163,17 @@ public class TimerSetActivity extends AppCompatActivity {
          private  void updateButtons(boolean pause){
         if(pause){
             btnPause.setText(getResources().getString(R.string.btn_restart));
+
         } else{
             btnPause.setText(getResources().getString(R.string.btn_pause));
+
 
         }
                     }
         private void pauseTime(){
             SharedPreferences prefs = getSharedPreferences(TIMER_PREFERENCES, MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
-            long millisLeft = prefs.getLong(END_TIME, 0);
+            millisLeft = prefs.getLong(END_TIME, 0);
             long timeLeft = millisLeft - System.currentTimeMillis();
             timerPaused = true;
             Intent intent = new Intent(getApplicationContext(), TimerService.class);
@@ -170,6 +184,9 @@ public class TimerSetActivity extends AppCompatActivity {
             editor.putLong(TIME_AT_PAUSE, timeLeft).apply();
             editor.putLong(END_TIME, millisLeft).apply();
             timer.onPauseTimer();
+            SharedPreferences staticPrefs= getSharedPreferences(STATIC_TIMER, MODE_PRIVATE);
+            SharedPreferences.Editor editor1 = staticPrefs.edit();
+            editor1.putBoolean(IMAGE_IN_VIEW, false).apply();
             updateButtons(true);
 
         }
@@ -218,8 +235,31 @@ public class TimerSetActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         SharedPreferences preferences = getSharedPreferences(TIMER_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences staticprefs = getSharedPreferences(STATIC_TIMER, MODE_PRIVATE);
         timerRunning = preferences.getBoolean(TIMER_RUNNING, false);
         timerPaused = preferences.getBoolean(TIMER_PAUSED, false);
+        imageTimer = staticprefs.getBoolean(IMAGE_IN_VIEW, true);
         updateButtons(timerPaused);
+        updateTextView(imageTimer);
+    }
+
+    private void updateTextView(boolean imageTimer){
+        if(imageTimer){
+            tvTimer.setText("");
+            tvTimer.setVisibility(View.GONE);
+        } else{
+        tvTimer.setVisibility(View.VISIBLE);
+        int hours   = (int) ((millisLeft / (1000*60*60)) % 24);
+        int minutes = (int) (millisLeft / (1000*60)) % 60;
+        int seconds = (int) (millisLeft / 1000) % 60;
+        String timeLeftFormatted;
+        if(hours ==0) {
+            timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        } else{
+            timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
+
+        }
+        tvTimer.setText(timeLeftFormatted);
+    }
     }
 }

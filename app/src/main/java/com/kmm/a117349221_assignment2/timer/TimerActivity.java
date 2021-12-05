@@ -21,6 +21,7 @@ import com.kmm.a117349221_assignment2.clock.ClockActivity;
 import java.util.Locale;
 
 import static com.kmm.a117349221_assignment2.IConstants.END_TIME;
+import static com.kmm.a117349221_assignment2.IConstants.IMAGE_IN_VIEW;
 import static com.kmm.a117349221_assignment2.IConstants.STATIC_TIME;
 import static com.kmm.a117349221_assignment2.IConstants.STATIC_TIMER;
 import static com.kmm.a117349221_assignment2.IConstants.TIME_SET;
@@ -131,6 +132,7 @@ public class TimerActivity extends AppCompatActivity {
             editor.putLong(END_TIME, millisLeft).apply();
             editor.putBoolean(TIMER_RUNNING, timerRunning).apply();
             editor1.putLong(STATIC_TIME, millisLeft).apply();
+            editor1.putBoolean(IMAGE_IN_VIEW, timerRunning).apply();
 
             Intent intent = new Intent(getApplicationContext(), TimerService.class);
             startService(intent);

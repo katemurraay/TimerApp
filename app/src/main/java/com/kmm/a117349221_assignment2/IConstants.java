@@ -10,6 +10,7 @@ public class IConstants {
 
    public static String STATIC_TIMER = "static_timer_prefs";
     public static String STATIC_TIME = "static_time";
+    public static final String IMAGE_IN_VIEW = "timer_visible";
 
     /* BROADCAST RECEIVER */
     public static final String TIMER_STATE = "timer_state";
@@ -20,5 +21,6 @@ public class IConstants {
 
     /* NOTIFICATION CHANNELS */
     public static final String CHANNEL_TIMER_ID = "timer_channel";
+
 
 }
