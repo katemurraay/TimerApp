@@ -4,9 +4,13 @@ import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.media.AudioAttributes;
+import android.net.Uri;
 import android.os.Build;
 
 public class TimerApp extends Application {
+
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -19,7 +23,10 @@ public class TimerApp extends Application {
                     "Timer",
                     NotificationManager.IMPORTANCE_HIGH
                     );
+
+
             timerChannel.setDescription("Timer Completed");
+
          NotificationManager manager = getSystemService(NotificationManager.class);
          manager.createNotificationChannel(timerChannel);
         }

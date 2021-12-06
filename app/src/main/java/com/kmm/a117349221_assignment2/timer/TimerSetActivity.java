@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -40,6 +41,7 @@ import static com.kmm.a117349221_assignment2.IConstants.TIMER_PREFERENCES;
 import static com.kmm.a117349221_assignment2.IConstants.TIMER_RUNNING;
 import static com.kmm.a117349221_assignment2.IConstants.TIMER_STATE;
 import static com.kmm.a117349221_assignment2.IConstants.TIME_AT_PAUSE;
+import static com.kmm.a117349221_assignment2.IConstants.TIME_LEFT;
 import static com.kmm.a117349221_assignment2.IConstants.TIME_SET;
 
 public class TimerSetActivity extends AppCompatActivity {
@@ -114,15 +116,17 @@ public class TimerSetActivity extends AppCompatActivity {
 
     private void updateUI(Intent intent) {
         boolean isRunning = intent.getBooleanExtra(TIMER_STATE, false);
+        long millisLeft = intent.getLongExtra(TIME_LEFT, 1000);
         SharedPreferences prefs = getSharedPreferences(TIMER_PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
         if(isRunning){
              timerRunning = true;
+
         } else{
             //set notification
             timerRunning =false;
-            String title = "TIMER";
+             String title = "TIMER";
             String message= "Timer Completed";
 //https://gist.github.com/codinginflow/33e2ef8270892acca1ce7cab955ee3d3
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, IConstants.CHANNEL_TIMER_ID)
@@ -132,8 +136,13 @@ public class TimerSetActivity extends AppCompatActivity {
                     .setAutoCancel(true)
                     .setDefaults(NotificationCompat.DEFAULT_ALL)
                     .setPriority(NotificationCompat.PRIORITY_HIGH);
+
             NotificationManagerCompat notificationCompat = NotificationManagerCompat.from(this);
             notificationCompat.notify(123, builder.build());
+
+
+
+
              cancelTimer();
         }
         editor.putBoolean(TIMER_RUNNING, timerRunning).apply();

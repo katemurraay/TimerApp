@@ -42,7 +42,7 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
     public void onResumeTimer(boolean paused){
         SharedPreferences.Editor editor = preferences.edit();
         thread = new Thread(this);
-     
+
         if(paused){
             running = false;
             editor.putBoolean(IConstants.IMAGE_IN_VIEW, false).apply();
