@@ -10,7 +10,11 @@ import android.os.Build;
 
 public class TimerApp extends Application {
 
-
+    /* Code below is based on:
+    Github Repository: "Notifications Tutorial: Part 1,
+    codinginflow,
+    https://gist.github.com/codinginflow/33e2ef8270892acca1ce7cab955ee3d3
+     */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -22,7 +26,7 @@ public class TimerApp extends Application {
             NotificationChannel timerChannel = new NotificationChannel(IConstants.CHANNEL_TIMER_ID,
                     "Timer",
                     NotificationManager.IMPORTANCE_HIGH
-                    );
+                    ); //END
 
 
             timerChannel.setDescription("Timer Completed");

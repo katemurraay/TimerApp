@@ -50,7 +50,11 @@ public class ClockActivity extends AppCompatActivity {
 
 
 
-//https://stackoverflow.com/a/4776556
+/* Code below is based on:
+StackOverflow Answer to Question: "Updating TextView every N seconds?",
+Answered by: Rainer,
+https://stackoverflow.com/a/4776556
+ */
       timer = new Timer();
       timerTask = new TimerTask() {
 
@@ -68,7 +72,7 @@ public class ClockActivity extends AppCompatActivity {
         timer.schedule(timerTask, 1000, 1000);//Update every second
 
 
-
+//END
 
 
 

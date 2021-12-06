@@ -125,11 +125,12 @@ public class TimerActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         SharedPreferences.Editor editor1 = staticPrefs.edit();
         timerRunning = true;
+        long endTime = millisLeft + System.currentTimeMillis();
 
         editor = prefs.edit();
         if(millisLeft>1000) {
             editor.putLong(TIME_SET, millisLeft).apply();
-            editor.putLong(END_TIME, millisLeft).apply();
+            editor.putLong(END_TIME, endTime).apply();
             editor.putBoolean(TIMER_RUNNING, timerRunning).apply();
             editor1.putLong(STATIC_TIME, millisLeft).apply();
             editor1.putBoolean(IMAGE_IN_VIEW, timerRunning).apply();

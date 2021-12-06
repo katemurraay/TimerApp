@@ -33,6 +33,17 @@
             android:background="@drawable/button_cancel_shape"
             android:backgroundTint="@color/dark_grey"
             android:id="@+id/btnCancel"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:text="@string/tv_plus"
+            android:id="@+id/tvPlus"
+            android:layout_above="@+id/bottom_navigation"/>
         <Button
 
             android:layout_width="wrap_content"

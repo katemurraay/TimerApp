@@ -27,14 +27,15 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
     private long originalTime;
     private SharedPreferences preferences;
 
-    public TimerSurfaceView(Context context, float length, long time) {
+    public TimerSurfaceView(Context context, float length,long time) {
         super(context);
         this.length = length;
         holder = getHolder();
-        this.time =time;
+
         colourArray = context.getResources().getIntArray(R.array.timer_colours);
         preferences = context.getSharedPreferences(IConstants.STATIC_TIMER, Context.MODE_PRIVATE);
         originalTime = preferences.getLong(IConstants.STATIC_TIME, 1000);
+        this.time = time;
     }
 
 
@@ -150,5 +151,8 @@ public class TimerSurfaceView extends SurfaceView implements Runnable {
     public void setTime(long time){
         this.time = time;
 
+    }
+    public void addTime(long originalTime){
+        this.originalTime = originalTime;
     }
 }

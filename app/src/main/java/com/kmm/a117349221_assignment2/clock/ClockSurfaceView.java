@@ -64,24 +64,29 @@ public class ClockSurfaceView extends SurfaceView implements Runnable {
                 Paint forePaint = new Paint();
                 forePaint.setColor(Color.WHITE);
                 forePaint.setStrokeWidth(2f);
+                forePaint.isAntiAlias();
                 Paint secPaint = new Paint();
                 secPaint.setColor(Color.RED);
                 secPaint.setStrokeWidth(1.5f);
+                secPaint.isAntiAlias();
                 Paint milliPaint = new Paint();
                 milliPaint.setColor(Color.GRAY);
                 milliPaint.setStrokeWidth(1.5f);
+                milliPaint.isAntiAlias();
 
 
                 //draw the marks
                 RegPoly secMarks = new RegPoly(60, getWidth()/2, getHeight()/2, length + 80, canvas, forePaint);
+                RegPoly hourMarks = new RegPoly(12, getWidth()/2, getHeight()/2, length + 80, canvas, forePaint);
 
                 RegPoly milliMarks = new RegPoly(60, 7 *getWidth()/20, 11 *getHeight()/20, length-200, canvas, forePaint);
 
                 secMarks.drawNodes(4.5f);
+                hourMarks.drawNodes(10f);
 
                 milliMarks.drawNodes(2f);
 
-                //hourMarks.drawNodes(4);
+
                 forePaint.setTextSize(35f);
                 RegPoly poly = new RegPoly(12, getWidth()/2, getHeight()/2, length+30, canvas, forePaint);
 
@@ -110,7 +115,7 @@ public class ClockSurfaceView extends SurfaceView implements Runnable {
                 milliHand.drawRadius(milliseconds + 45);
 
                 try {
-                    Thread.sleep(6);
+                    Thread.sleep(10);
                 } catch (Exception e){
                     e.printStackTrace();
                 }

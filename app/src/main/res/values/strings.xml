@@ -97,5 +97,6 @@
     <string name="tv_hours">hours</string>
     <string name="tv_min"> min</string>
     <string name="tv_sec"> sec</string>
+    <string name="tv_plus"> + 1.00</string>
 
 </resources>
